@@ -1,9 +1,19 @@
 import { Hike } from "codehike"
-import { Guide } from "./guide"
+import { Guide } from "@/components/guide"
 
 <Hike as={Guide}>
 
-## !steps Choose a project
+## !steps Quick start
+
+In this tutorial you will add Inngest to a Next.js app to see how easy it can be to build complex workflows.
+
+Inngest makes it easy to build, manage, and execute reliable workflows. Some use cases include scheduling drip marketing campaigns and payment flows, or chaining LLM interactions.
+
+By the end of this ten-minute tutorial you will:
+
+- Set up and run Inngest on your machine.
+- Write your first Inngest function.
+- Trigger your function from code and Inngest Dev Server.
 
 In this tutorial you can use any existing Next.js project, or you can create a new one.
 
@@ -11,23 +21,11 @@ Open the chosen project in your code editor.
 
 Next, start your Next.js app in development mode by running:
 
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-  "Targaryen",
-]
-
-const winner =
-  houses[
-    Math.floor(
-      Math.random() * houses.length,
-    )
-  ]
-
-console.log(`Iron Throne: ${winner}`)
+```bash !ch-exclude
+npm run dev
 ```
+
+### !preview
 
 ## !steps Install Inngest
 
@@ -58,56 +56,33 @@ console.log(clash())
 
 The third book, A Storm of Swords, is known for its intense and shocking developments. Battles rage on, alliances shift, and characters face unexpected challenges and betrayals, making it one of the most thrilling books in the series.
 
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-]
+```ts src/inngest/client.ts
+import { Inngest } from "inngest"
 
-const reveal = () => {
-  const traitor =
-    houses[
-      Math.floor(
-        Math.random() * houses.length,
-      )
-    ]
-  return `${traitor} betrays the alliance!`
-}
-
-console.log(reveal())
+// Create a client to send and receive events
+export const inngest = new Inngest({
+  id: "my-app",
+})
 ```
 
 ## !steps Write your first Inngest function
 
 A Feast for Crows, the fourth book, explores the aftermath of the wars, with a focus on the characters in the southern regions of Westeros. It delves into the politics and power struggles in a kingdom weary of battle.
 
-```js george.js
-const houses = [
-  "Martell",
-  "Lannister",
-  "Baratheon",
-  "Tyrell",
-]
+```ts src/app/api/inngest/route.ts
+import { serve } from "inngest/next"
+import { inngest } from "../../../inngest/client"
 
-const intrigue = () => {
-  const ally1 =
-    houses[
-      Math.floor(
-        Math.random() * houses.length,
-      )
-    ]
-  const ally2 =
-    houses[
-      Math.floor(
-        Math.random() * houses.length,
-      )
-    ]
-  return `${ally1} and ${ally2} form an alliance!`
-}
-
-console.log(intrigue())
+// Create an API that serves zero functions
+export const { GET, POST, PUT } = serve({
+  client: inngest,
+  functions: [
+    /* your functions will be passed here later! */
+  ],
+})
 ```
+
+Something about [route.ts](), spotlink,
 
 ## !steps A Dance with Dragons
 

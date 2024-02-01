@@ -23,15 +23,19 @@ export function Guide({ hike }: { hike: any }) {
             minSize={25}
             defaultSize={30}
           >
+            {/* left sidebar */}
             <StepsNav />
             <StepContent />
+            {/* end left sidebar */}
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel
             className="flex max-h-full min-h-full flex-col"
             defaultSize={70}
           >
+            {/* right panel */}
             <StepPreview />
+            {/* end right panel */}
           </ResizablePanel>
         </ResizablePanelGroup>
       </main>
@@ -46,45 +50,50 @@ function PreviewSection({ step }: any) {
         <ResizablePanel className="" minSize={20}>
           <div className="flex h-full">
             <div className="flex h-full flex-col border-r border-neutral-700 text-white pt-4 w-48">
-              <FileTree
-                tree={[
-                  {
-                    id: "2",
-                    name: "src",
-                    children: [
-                      {
-                        id: "c1",
-                        name: "inngest",
-                        children: [{ id: "c1-1", name: "client.ts" }],
-                      },
-                      {
-                        id: "app",
-                        name: "app",
-                        children: [
-                          {
-                            id: "page",
-                            name: "page.tsx",
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ]}
-              />
+              <FileTree tree={filetree} />
             </div>
             <div className="p-4">
-              {step.code.map((code: any) => (
+              {step.code?.map((code: any) => (
                 <Code codeblock={code} />
               ))}
             </div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel className="">Down</ResizablePanel>
+        <ResizablePanel className="">
+          <div className="text-white flex gap-2">
+            <div className="border border-white">Inngest Dev Server</div>
+            <div className="border border-white">Nextjs App</div>
+          </div>
+        </ResizablePanel>
       </ResizablePanelGroup>
     </section>
   )
 }
+
+const filetree = [
+  {
+    id: "2",
+    name: "src",
+    children: [
+      {
+        id: "c1",
+        name: "inngest",
+        children: [{ id: "c1-1", name: "client.ts" }],
+      },
+      {
+        id: "app",
+        name: "app",
+        children: [
+          {
+            id: "page",
+            name: "page.tsx",
+          },
+        ],
+      },
+    ],
+  },
+]
 
 function Code({ codeblock }: { codeblock: CodeBlock }) {
   return (

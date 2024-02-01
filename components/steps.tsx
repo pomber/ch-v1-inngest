@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { cn } from "../../lib/utils"
+import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 const StepsContext = React.createContext({
@@ -60,7 +60,7 @@ export function StepsNav({ className }: { className?: string }) {
         <SelectContent>
           {steps.map((step, i) => (
             <SelectItem value={i.toString()} key={i}>
-              {step.title}
+              {i}. {step.title}
             </SelectItem>
           ))}
         </SelectContent>
