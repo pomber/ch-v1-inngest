@@ -15,10 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className="dark bg-zinc-950 prose prose-invert mx-auto py-24 max-w-5xl"
-    >
+    <html lang="en" className="dark bg-zinc-950">
       <body className={inter.className}>{children}</body>
     </html>
   )
