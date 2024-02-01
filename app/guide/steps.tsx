@@ -59,7 +59,9 @@ export function StepsNav({ className }: { className?: string }) {
         </SelectTrigger>
         <SelectContent>
           {steps.map((step, i) => (
-            <SelectItem value={i.toString()}>{step.title}</SelectItem>
+            <SelectItem value={i.toString()} key={i}>
+              {step.title}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
