@@ -5,14 +5,41 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import { StepContent, StepPreview, Steps, StepsNav } from "./steps"
-import { FileTree } from "@/components/ui/file-tree"
+import {
+  CodeTree,
+  FileNode,
+  FileTreeProvider,
+  FolderNode,
+  TreeNode,
+} from "./code-tree"
+
+function cloneTree(tree: TreeNode[]): TreeNode[] {
+  return tree.map((node) => {
+    if ("children" in node) {
+      return {
+        ...node,
+        children: cloneTree(node.children),
+      }
+    }
+    return node
+  })
+}
 
 export function Guide({ hike }: { hike: any }) {
-  const steps = hike.steps.map((step: any, i: number) => ({
-    title: step.query,
-    content: <div className="p-2">{step.children}</div>,
-    preview: <PreviewSection step={step} />,
-  }))
+  const files: FolderNode = {
+    id: "src",
+    name: "src",
+    children: [],
+  }
+  const steps = hike.steps.map((step: any, i: number) => {
+    step.code?.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
+    const filesClone = cloneTree([files])
+    return {
+      title: step.query,
+      content: <div className="p-2">{step.children}</div>,
+      preview: <PreviewSection step={step} files={filesClone} index={i} />,
+    }
+  })
 
   return (
     <Steps steps={steps}>
@@ -23,10 +50,10 @@ export function Guide({ hike }: { hike: any }) {
             minSize={25}
             defaultSize={30}
           >
-            {/* left sidebar */}
+            {/* left panel */}
             <StepsNav />
             <StepContent />
-            {/* end left sidebar */}
+            {/* end left panel */}
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel
@@ -43,21 +70,14 @@ export function Guide({ hike }: { hike: any }) {
   )
 }
 
-function PreviewSection({ step }: any) {
+function PreviewSection({ step, files, index }: any) {
   return (
     <section className="w-full bg-zinc-950 flex max-h-full min-h-full flex-col">
       <ResizablePanelGroup direction="vertical" className="">
         <ResizablePanel className="" minSize={20}>
-          <div className="flex h-full">
-            <div className="flex h-full flex-col border-r border-neutral-700 text-white pt-4 w-48">
-              <FileTree tree={filetree} />
-            </div>
-            <div className="p-4">
-              {step.code?.map((code: any) => (
-                <Code codeblock={code} />
-              ))}
-            </div>
-          </div>
+          <FileTreeProvider tree={files as any}>
+            <CodeTree className="h-full" key={index} />
+          </FileTreeProvider>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="">
@@ -71,29 +91,39 @@ function PreviewSection({ step }: any) {
   )
 }
 
-const filetree = [
-  {
-    id: "2",
-    name: "src",
-    children: [
-      {
-        id: "c1",
-        name: "inngest",
-        children: [{ id: "c1-1", name: "client.ts" }],
-      },
-      {
-        id: "app",
-        name: "app",
-        children: [
-          {
-            id: "page",
-            name: "page.tsx",
-          },
-        ],
-      },
-    ],
-  },
-]
+function addFile(tree: FolderNode, codeblock: CodeBlock) {
+  const path = codeblock.meta || "index"
+  const parts = path.split("/")
+  let node = { children: [tree] } as FolderNode
+  const name = parts.pop() as string
+  parts.forEach((part) => {
+    const folder = node.children.find((child) => child.name === part)
+    if (folder) {
+      node = folder as FolderNode
+    } else {
+      const folder = {
+        id: part,
+        name: part,
+        children: [],
+      }
+      node.children.push(folder)
+      node = folder
+    }
+  })
+
+  const existing = node.children.find((child) => child.name === name) as
+    | FileNode
+    | undefined
+  if (existing) {
+    existing.content = <Code codeblock={codeblock} />
+  } else {
+    node.children.push({
+      id: path,
+      name,
+      content: <Code codeblock={codeblock} />,
+    } as TreeNode)
+  }
+}
 
 function Code({ codeblock }: { codeblock: CodeBlock }) {
   return (

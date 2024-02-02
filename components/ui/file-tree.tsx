@@ -10,7 +10,7 @@ function Node({ node, style }: NodeRendererProps<any>) {
       onClick={(e) => {
         e.stopPropagation()
         if (!node.isLeaf) {
-          node.toggle()
+          // node.toggle()
         } else {
           node.select()
         }
@@ -41,9 +41,15 @@ function Node({ node, style }: NodeRendererProps<any>) {
   )
 }
 
-export function FileTree({ tree }: any) {
-  // const { tree, selected, select } = useTree()
-  const selected = undefined
+export function FileTree({
+  tree,
+  select,
+  selected,
+}: {
+  tree: any
+  select: (id: string) => void
+  selected: string
+}) {
   return (
     <Tree
       data={tree}
@@ -55,7 +61,7 @@ export function FileTree({ tree }: any) {
       onSelect={(selection) => {
         const selectedNode = selection[0]
         if (selectedNode?.isLeaf) {
-          // select(selection[0]?.id)
+          select(selection[0]?.id)
         } else {
           return false
         }

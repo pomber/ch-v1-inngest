@@ -25,32 +25,9 @@ Next, start your Next.js app in development mode by running:
 npm run dev
 ```
 
-### !preview
-
 ## !steps Install Inngest
 
 With the Next.js app now running running open a new tab in your terminal. In your project directory's root, run the following command to install Inngest SDK:
-
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-  "Targaryen",
-]
-
-const clash = () => {
-  const winner =
-    houses[
-      Math.floor(
-        Math.random() * houses.length,
-      )
-    ]
-  return `${winner} wins the battle!`
-}
-
-console.log(clash())
-```
 
 ## !steps Create an Inngest client
 
@@ -65,10 +42,6 @@ export const inngest = new Inngest({
 })
 ```
 
-## !steps Write your first Inngest function
-
-A Feast for Crows, the fourth book, explores the aftermath of the wars, with a focus on the characters in the southern regions of Westeros. It delves into the politics and power struggles in a kingdom weary of battle.
-
 ```ts src/app/api/inngest/route.ts
 import { serve } from "inngest/next"
 import { inngest } from "../../../inngest/client"
@@ -82,80 +55,74 @@ export const { GET, POST, PUT } = serve({
 })
 ```
 
-Something about [route.ts](), spotlink,
+## !steps Write your first Inngest function
 
-## !steps A Dance with Dragons
+A Feast for Crows, the fourth book, explores the aftermath of the wars, with a focus on the characters in the southern regions of Westeros. It delves into the politics and power struggles in a kingdom weary of battle.
+
+```ts src/inngest/functions.ts
+import { inngest } from "./client"
+
+export const helloWorld =
+  inngest.createFunction(
+    { id: "hello-world" },
+    { event: "test/hello.world" },
+    async ({ event, step }) => {
+      await step.sleep(
+        "wait-a-moment",
+        "1s",
+      )
+      return {
+        event,
+        body: "Hello, World!",
+      }
+    },
+  )
+```
+
+```ts src/app/api/inngest/route.ts
+import { serve } from "inngest/next"
+import { inngest } from "../../../inngest/client"
+import { helloWorld } from "../../../inngest/functions"
+
+export const { GET, POST, PUT } = serve({
+  client: inngest,
+  functions: [
+    helloWorld, // <-- This is where you'll always add all your functions
+  ],
+})
+```
+
+Something about [route.ts](), spotlink.
+
+## !steps Trigger your function from the development UI
 
 A Dance with Dragons, the fifth book, runs concurrently with A Feast for Crows and focuses on the characters in the North and across the Narrow Sea. The story advances with dragons, the Night’s Watch, and the lingering threat of winter.
 
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-  "Targaryen",
-]
-
-const dragons = () => {
-  const dragon =
-    houses[
-      Math.floor(
-        Math.random() * houses.length,
-      )
-    ]
-  return `${dragon} has a dragon!`
-}
-
-console.log(dragons())
-```
-
-## !steps The Winds of Winter
+## !steps Trigger from code
 
 The Winds of Winter, the anticipated sixth book, is expected to continue the intricate storylines and bring new twists and turns to the world of Westeros. Fans eagerly await its release.
 
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-  "Targaryen",
-  "Martell",
-  "Tyrell",
-  "Greyjoy",
-]
+```ts src/app/api/hello/route.ts
+import { NextResponse } from "next/server"
+import { inngest } from "../../../inngest/client" // Import our client
 
-const winterIsComing = () => {
-  const isComing = Math.random() > 0.99
-  if (isComing) {
-    return "Winter is coming!"
-  } else {
-    return "Winter is not coming."
-  }
+// Opt out of caching; every request should send a new event
+export const dynamic = "force-dynamic"
+
+// Create a simple async Next.js API route handler
+export async function GET() {
+  // Send your event payload to Inngest
+  await inngest.send({
+    name: "test/hello.world",
+    data: {
+      email: "testFromNext@example.com",
+    },
+  })
+
+  return NextResponse.json({
+    name: "Hello Inngest from Next!",
+  })
 }
-
-console.log(winterIsComing())
-```
-
-## !steps A Dream of Spring
-
-A Dream of Spring is the proposed final book in the series, anticipated to conclude the epic saga. It remains one of the most awaited books in modern fantasy literature.
-
-```js george.js
-const houses = [
-  "Stark",
-  "Lannister",
-  "Baratheon",
-  "Targaryen",
-  "Martell",
-  "Tyrell",
-  "Greyjoy",
-]
-
-const keepDreaming = () => {
-  return "Not gonna happen..."
-}
-
-console.log(keepDreaming())
 ```
 
 </Hike>
