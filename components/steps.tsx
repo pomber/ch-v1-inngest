@@ -38,6 +38,19 @@ export function StepPreview() {
   const { preview } = steps[currentStep]
   return preview
 }
+export function NextStep({ className }: { className?: string }) {
+  const { steps, currentStep, setCurrentStep } = React.useContext(StepsContext)
+  if (currentStep === steps.length - 1) return null
+
+  return (
+    <button
+      onClick={() => setCurrentStep(currentStep + 1)}
+      className={cn("text-purple-400 underline text-left", className)}
+    >
+      Next: {steps[currentStep + 1].title}
+    </button>
+  )
+}
 
 export function StepsNav({ className }: { className?: string }) {
   const { steps, currentStep, setCurrentStep } = React.useContext(StepsContext)

@@ -4,7 +4,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { StepContent, StepPreview, Steps, StepsNav } from "./steps"
+import { NextStep, StepContent, StepPreview, Steps, StepsNav } from "./steps"
 import {
   CodeTree,
   FileNode,
@@ -46,13 +46,16 @@ export function Guide({ hike }: { hike: any }) {
       <main className="flex min-h-0 flex-1 h-screen">
         <ResizablePanelGroup direction="horizontal" className="w-full">
           <ResizablePanel
-            className="bg-zinc-800 p-2 prose prose-invert"
+            className="bg-zinc-800 p-2 prose prose-invert flex flex-col"
             minSize={25}
             defaultSize={30}
           >
             {/* left panel */}
             <StepsNav />
-            <StepContent />
+            <div className="overflow-auto flex-1 min-h-0 pb-16">
+              <StepContent />
+              <NextStep className="p-2" />
+            </div>
             {/* end left panel */}
           </ResizablePanel>
           <ResizableHandle withHandle />
