@@ -27,6 +27,12 @@ export function Steps({ steps, children }: any) {
   )
 }
 
+export function useCurrentStep() {
+  const { currentStep, steps } = React.useContext(StepsContext)
+  const step = steps[currentStep]
+  return step
+}
+
 export function StepContent() {
   const { steps, currentStep } = React.useContext(StepsContext)
   const { content } = steps[currentStep]
@@ -45,7 +51,10 @@ export function NextStep({ className }: { className?: string }) {
   return (
     <button
       onClick={() => setCurrentStep(currentStep + 1)}
-      className={cn("text-purple-400 underline text-left", className)}
+      className={cn(
+        "text-purple-400 hover:text-purple-300 underline text-left",
+        className,
+      )}
     >
       Next: {steps[currentStep + 1].title}
     </button>

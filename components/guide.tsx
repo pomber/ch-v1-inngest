@@ -7,6 +7,7 @@ import {
 import { NextStep, StepContent, StepPreview, Steps, StepsNav } from "./steps"
 import {
   CodeTree,
+  FileLink,
   FileNode,
   FileTreeProvider,
   FolderNode,
@@ -36,6 +37,7 @@ export function Guide({ hike }: { hike: any }) {
     const filesClone = cloneTree([files])
     return {
       title: step.query,
+      files: filesClone,
       content: <div className="p-2">{step.children}</div>,
       preview: <PreviewSection step={step} files={filesClone} index={i} />,
     }
@@ -43,32 +45,34 @@ export function Guide({ hike }: { hike: any }) {
 
   return (
     <Steps steps={steps}>
-      <main className="flex min-h-0 flex-1 h-screen">
-        <ResizablePanelGroup direction="horizontal" className="w-full">
-          <ResizablePanel
-            className="bg-zinc-800 p-2 prose prose-invert flex flex-col"
-            minSize={25}
-            defaultSize={30}
-          >
-            {/* left panel */}
-            <StepsNav />
-            <div className="overflow-auto flex-1 min-h-0 pb-16">
-              <StepContent />
-              <NextStep className="p-2" />
-            </div>
-            {/* end left panel */}
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel
-            className="flex max-h-full min-h-full flex-col"
-            defaultSize={70}
-          >
-            {/* right panel */}
-            <StepPreview />
-            {/* end right panel */}
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </main>
+      <FileTreeProvider>
+        <main className="flex min-h-0 flex-1 h-screen">
+          <ResizablePanelGroup direction="horizontal" className="w-full">
+            <ResizablePanel
+              className="bg-zinc-800 p-2 prose prose-invert flex flex-col"
+              minSize={25}
+              defaultSize={30}
+            >
+              {/* left panel */}
+              <StepsNav />
+              <div className="overflow-auto flex-1 min-h-0 pb-16">
+                <StepContent />
+                <NextStep className="p-2" />
+              </div>
+              {/* end left panel */}
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel
+              className="flex max-h-full min-h-full flex-col"
+              defaultSize={70}
+            >
+              {/* right panel */}
+              <StepPreview />
+              {/* end right panel */}
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </main>
+      </FileTreeProvider>
     </Steps>
   )
 }
@@ -78,9 +82,7 @@ function PreviewSection({ step, files, index }: any) {
     <section className="w-full bg-zinc-950 flex max-h-full min-h-full flex-col">
       <ResizablePanelGroup direction="vertical" className="">
         <ResizablePanel className="" minSize={20}>
-          <FileTreeProvider tree={files as any}>
-            <CodeTree className="h-full" key={index} />
-          </FileTreeProvider>
+          <CodeTree className="h-full" key={index} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="">

@@ -3,6 +3,7 @@
 import React from "react"
 import { cn } from "../lib/utils"
 import { FileTree } from "./ui/file-tree"
+import { useCurrentStep } from "./steps"
 
 export type TreeNode = FileNode | FolderNode
 export interface FileNode {
@@ -17,29 +18,41 @@ export interface FolderNode {
 }
 
 const FileTreeContext = React.createContext({
-  tree: [] as TreeNode[],
   select: (id: string) => {},
   selected: "",
 })
 
-export function FileTreeProvider({
-  children,
-  tree,
-}: {
-  children: React.ReactNode
-  tree: TreeNode[]
-}) {
+export function FileTreeProvider({ children }: { children: React.ReactNode }) {
   const [selected, select] = React.useState("")
 
   return (
-    <FileTreeContext.Provider value={{ tree, select, selected }}>
+    <FileTreeContext.Provider value={{ select, selected }}>
       {children}
     </FileTreeContext.Provider>
   )
 }
 
+export function FileLink({
+  path,
+  children,
+}: {
+  path: string
+  children?: React.ReactNode
+}) {
+  const { select } = React.useContext(FileTreeContext)
+  return (
+    <button
+      onClick={() => select(path)}
+      className="text-blue-300 hover:text-blue-400"
+    >
+      {children}
+    </button>
+  )
+}
+
 export function CodeTree({ className }: { className?: string }) {
-  const { tree, select, selected } = React.useContext(FileTreeContext)
+  const tree = useCurrentStep().files as TreeNode[]
+  const { select, selected } = React.useContext(FileTreeContext)
 
   const files: FileNode[] = []
   const folders: FolderNode[] = [{ children: tree, id: "", name: "" }]
