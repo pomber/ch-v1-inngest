@@ -58,6 +58,7 @@ export function FileTree({
       rowHeight={24}
       selection={selected}
       width="100%"
+      disableMultiSelection
       onSelect={(selection) => {
         const selectedNode = selection[0]
         if (selectedNode?.isLeaf) {

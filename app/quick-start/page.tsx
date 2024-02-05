@@ -5,6 +5,7 @@ export default function GettingStarted() {
   return (
     <Content
       components={{
+        // @ts-ignore
         a: CustomLink,
       }}
     />
@@ -14,6 +15,7 @@ export default function GettingStarted() {
 const CustomLink = ({
   href,
   children,
+  ...rest
 }: {
   href: string
   children: React.ReactNode
@@ -21,5 +23,9 @@ const CustomLink = ({
   if (href.startsWith("!")) {
     return <FileLink path={href.slice(1)}>{children}</FileLink>
   }
-  return <a href={href}>{children}</a>
+  return (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  )
 }

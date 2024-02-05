@@ -38,8 +38,10 @@ export function Guide({ hike }: { hike: any }) {
     return {
       title: step.query,
       files: filesClone,
+      // auto select the first code block
+      selected: step.code?.[0]?.meta || null,
       content: <div className="p-2">{step.children}</div>,
-      preview: <PreviewSection step={step} files={filesClone} index={i} />,
+      preview: <PreviewSection index={i} />,
     }
   })
 
@@ -77,12 +79,12 @@ export function Guide({ hike }: { hike: any }) {
   )
 }
 
-function PreviewSection({ step, files, index }: any) {
+function PreviewSection({ index }: any) {
   return (
     <section className="w-full bg-zinc-950 flex max-h-full min-h-full flex-col">
       <ResizablePanelGroup direction="vertical" className="">
         <ResizablePanel className="" minSize={20}>
-          <CodeTree className="h-full" key={index} />
+          <CodeTree className="h-full" />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="">
@@ -107,7 +109,7 @@ function addFile(tree: FolderNode, codeblock: CodeBlock) {
       node = folder as FolderNode
     } else {
       const folder = {
-        id: part,
+        id: node.id + "/" + part,
         name: part,
         children: [],
       }

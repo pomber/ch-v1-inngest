@@ -25,6 +25,14 @@ const FileTreeContext = React.createContext({
 export function FileTreeProvider({ children }: { children: React.ReactNode }) {
   const [selected, select] = React.useState("")
 
+  const step = useCurrentStep()
+
+  React.useEffect(() => {
+    if (step.selected && step.selected !== selected) {
+      select(step.selected)
+    }
+  }, [step.selected])
+
   return (
     <FileTreeContext.Provider value={{ select, selected }}>
       {children}
