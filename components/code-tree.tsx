@@ -81,7 +81,7 @@ export function CodeTree({ className }: { className?: string }) {
       <div className="h-full border-r border-neutral-700 text-white pt-4 w-48 min-w-48">
         <FileTree tree={tree} select={select} selected={selected} />
       </div>
-      <div className="p-4" key={selected}>
+      <div className="p-4 overflow-auto w-full h-full" key={selected}>
         {selectedFile?.content}
       </div>
     </div>

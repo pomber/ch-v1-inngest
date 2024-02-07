@@ -90,7 +90,9 @@ function PreviewSection({ screenshot }: any) {
           <CodeTree className="h-full" />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel className="">{screenshot}</ResizablePanel>
+        <ResizablePanel className="">
+          <div className="overflow-auto h-full">{screenshot}</div>
+        </ResizablePanel>
       </ResizablePanelGroup>
     </section>
   )
