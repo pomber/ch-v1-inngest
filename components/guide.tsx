@@ -7,7 +7,6 @@ import {
 import { NextStep, StepContent, StepPreview, Steps, StepsNav } from "./steps"
 import {
   CodeTree,
-  FileLink,
   FileNode,
   FileTreeProvider,
   FolderNode,
@@ -32,16 +31,20 @@ export function Guide({ hike }: { hike: any }) {
     name: "src",
     children: [],
   }
+  let prevScreenshot: any = null
   const steps = hike.steps.map((step: any, i: number) => {
     step.code?.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
     const filesClone = cloneTree([files])
+    prevScreenshot = step.preview?.[0]?.children || prevScreenshot
+    console.log("prevScreenshot", prevScreenshot)
     return {
       title: step.query,
       files: filesClone,
       // auto select the first code block
       selected: step.code?.[0]?.meta || null,
+      screenshot: prevScreenshot,
       content: <div className="p-2">{step.children}</div>,
-      preview: <PreviewSection index={i} />,
+      preview: <PreviewSection screenshot={prevScreenshot} />,
     }
   })
 
@@ -79,7 +82,7 @@ export function Guide({ hike }: { hike: any }) {
   )
 }
 
-function PreviewSection({ index }: any) {
+function PreviewSection({ screenshot }: any) {
   return (
     <section className="w-full bg-zinc-950 flex max-h-full min-h-full flex-col">
       <ResizablePanelGroup direction="vertical" className="">
@@ -87,12 +90,7 @@ function PreviewSection({ index }: any) {
           <CodeTree className="h-full" />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel className="">
-          <div className="text-white flex gap-2">
-            <div className="border border-white">Inngest Dev Server</div>
-            <div className="border border-white">Nextjs App</div>
-          </div>
-        </ResizablePanel>
+        <ResizablePanel className="">{screenshot}</ResizablePanel>
       </ResizablePanelGroup>
     </section>
   )
@@ -114,6 +112,7 @@ function addFile(tree: FolderNode, codeblock: CodeBlock) {
         children: [],
       }
       node.children.push(folder)
+      node.children.sort((a, b) => a.name.localeCompare(b.name))
       node = folder
     }
   })
@@ -129,6 +128,7 @@ function addFile(tree: FolderNode, codeblock: CodeBlock) {
       name,
       content: <Code codeblock={codeblock} />,
     } as TreeNode)
+    node.children.sort((a, b) => a.name.localeCompare(b.name))
   }
 }
 

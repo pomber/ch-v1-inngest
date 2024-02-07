@@ -76,7 +76,7 @@ export function StepsNav({ className }: { className?: string }) {
         value={currentStep.toString()}
         onValueChange={(value) => setCurrentStep(Number(value))}
       >
-        <SelectTrigger className="flex-1">
+        <SelectTrigger className="flex-1 text-left">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
