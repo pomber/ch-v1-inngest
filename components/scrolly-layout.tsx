@@ -44,22 +44,30 @@ export function Guide({ hike }: { hike: any }) {
     }
   })
 
+  let i = 0
+  const content = hike.children.map((kid: any) => {
+    if (kid.props?.name !== "steps") {
+      return kid
+    }
+    const index = i
+    const step = steps[i++]
+    return (
+      <ScrollyStep
+        key={index}
+        stepIndex={index}
+        className="border-l-4 border-zinc-700 data-[ch-selected]:border-blue-400 px-5 py-2 mb-24 rounded bg-zinc-900"
+      >
+        {step.content}
+      </ScrollyStep>
+    )
+  })
+
   return (
     <Steps steps={steps} className="">
       <FileTreeProvider>
         <Panels
           left={
-            <div className="overflow-auto px-2 pt-32 pb-[90vh]">
-              {steps.map((step: any, i: number) => (
-                <ScrollyStep
-                  key={i}
-                  stepIndex={i}
-                  className="border-l-4 border-zinc-700 data-[ch-selected]:border-blue-400 px-5 py-2 mb-24 rounded bg-zinc-900"
-                >
-                  {step.content}
-                </ScrollyStep>
-              ))}
-            </div>
+            <div className="overflow-auto px-2 pt-32 pb-[90vh]">{content}</div>
           }
           topRight={<CodeTree className="h-full" />}
           bottomRight={<Step element="screenshot" />}
