@@ -3,7 +3,7 @@
 import React from "react"
 import { cn } from "../lib/utils"
 import { FileTree } from "./ui/file-tree"
-import { useCurrentStep } from "./steps"
+import { useSteps } from "codehike/scrolly"
 
 export type TreeNode = FileNode | FolderNode
 export interface FileNode {
@@ -25,7 +25,8 @@ const FileTreeContext = React.createContext({
 export function FileTreeProvider({ children }: { children: React.ReactNode }) {
   const [selected, select] = React.useState("")
 
-  const step = useCurrentStep()
+  const { steps, selectedIndex } = useSteps()
+  const step = steps[selectedIndex]
 
   React.useEffect(() => {
     if (step.selected && step.selected !== selected) {
@@ -59,7 +60,10 @@ export function FileLink({
 }
 
 export function CodeTree({ className }: { className?: string }) {
-  const tree = useCurrentStep().files as TreeNode[]
+  const { steps, selectedIndex } = useSteps()
+  const step = steps[selectedIndex]
+
+  const tree = step.files as TreeNode[]
   const { select, selected } = React.useContext(FileTreeContext)
 
   const files: FileNode[] = []

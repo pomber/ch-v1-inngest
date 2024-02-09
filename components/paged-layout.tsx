@@ -1,10 +1,5 @@
 import { CodeContent, CodeBlock } from "codehike"
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable"
-import { NextStep, Step, StepContent, Steps, StepsNav } from "./steps"
+// import { NextStep, Step, StepContent, Steps, StepsNav } from "./steps"
 import {
   CodeTree,
   FileNode,
@@ -13,6 +8,8 @@ import {
   TreeNode,
 } from "./code-tree"
 import { Panels } from "./panels"
+import { Step, Steps } from "codehike/scrolly"
+import { NextStep, StepsNav } from "./paged-navigation"
 
 function cloneTree(tree: TreeNode[]): TreeNode[] {
   return tree.map((node) => {
@@ -49,14 +46,14 @@ export function Guide({ hike }: { hike: any }) {
   })
 
   return (
-    <Steps steps={steps}>
+    <Steps steps={steps} className="">
       <FileTreeProvider>
         <Panels
           left={
             <>
               <StepsNav />
               <div className="overflow-auto flex-1 min-h-0 pb-16">
-                <StepContent />
+                <Step element="content" />
                 <NextStep className="p-2" />
               </div>
             </>
