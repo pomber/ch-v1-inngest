@@ -17,7 +17,7 @@ export function Panels({
     <main className="flex min-h-0 flex-1 h-screen">
       <ResizablePanelGroup direction="horizontal" className="w-full">
         <ResizablePanel
-          className="bg-zinc-800 p-2 prose prose-invert flex flex-col"
+          className="bg-zinc-800 prose prose-invert flex flex-col"
           minSize={25}
           defaultSize={30}
         >
