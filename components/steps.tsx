@@ -39,11 +39,12 @@ export function StepContent() {
   return content
 }
 
-export function StepPreview() {
+export function Step({ element }: { element: string }) {
   const { steps, currentStep } = React.useContext(StepsContext)
-  const { preview } = steps[currentStep]
-  return preview
+  const step = steps[currentStep]
+  return step[element] as React.ReactNode
 }
+
 export function NextStep({ className }: { className?: string }) {
   const { steps, currentStep, setCurrentStep } = React.useContext(StepsContext)
   if (currentStep === steps.length - 1) return null
