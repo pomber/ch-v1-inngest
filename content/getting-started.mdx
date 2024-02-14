@@ -19,9 +19,13 @@ By the end of this ten-minute tutorial you will:
 
 In this tutorial you can use any existing Next.js project, or you can create a new one.
 
-Open the chosen project in your code editor.
+Run the following command in your terminal to create a new Next.js project:
 
-Next, start your Next.js app in development mode by running:
+```bash !ch-exclude
+npx create-next-app@latest --ts --eslint --tailwind --src-dir --app --import-alias='@/*' inngest-guide
+```
+
+Open the chosen project in your code editor and start your Next.js app in development mode by running:
 
 ```bash !ch-exclude
 npm run dev
@@ -29,7 +33,21 @@ npm run dev
 
 ## /
 
-The third book, A Storm of Swords, is known for its intense and shocking developments. Battles rage on, alliances shift, and characters face unexpected challenges and betrayals, making it one of the most thrilling books in the series.
+## 1. Install Inngest
+
+With the Next.js app now running running open a new tab in your terminal. In your project directory's root, run the following command to install Inngest SDK:
+
+## !steps Install Inngest
+
+```bash !ch-exclude
+npm install inngest
+```
+
+## /
+
+## 2. Run Inngest Dev Server
+
+Next, start the [Inngest Dev Server](https://www.inngest.com/docs/local-development#inngest-dev-server), which is a fast, in-memory version of Inngest where you can quickly send and view events events and function runs:
 
 ## !steps Install Inngest
 
@@ -39,7 +57,7 @@ Next, start the Inngest Dev Server, which is a fast, in-memory version of Innges
 npx inngest-cli@latest dev
 ```
 
-In your browser open http://localhost:8288 to see the development UI where later you will test the functions you write:
+In your browser open [http://localhost:8288](http://localhost:8288) to see the development UI where later you will test the functions you write:
 
 ### !preview
 
@@ -47,7 +65,11 @@ In your browser open http://localhost:8288 to see the development UI where later
 
 ## !steps Create an Inngest client
 
-The third book, A Storm of Swords, is known for its intense and shocking developments. Battles rage on, alliances shift, and characters face unexpected challenges and betrayals, making it one of the most thrilling books in the series.
+Inngest invokes your functions securely via an API endpoint at **/api/inngest**. To enable that, you will create an [Inngest client](https://www.inngest.com/docs/reference/client/create) in your Next.js project, which you will use to send events and create functions.
+
+Make a new directory next to your **app** directory (for example, **app/src/inngest**) where you'll define your Inngest functions and the client.
+
+In this directory create a file, **client.ts** and create your first Inngest client to send and receive events.
 
 ```ts src/inngest/client.ts
 import { Inngest } from "inngest"
@@ -58,6 +80,10 @@ export const inngest = new Inngest({
 })
 ```
 
+## !steps Set up route handler
+
+Set up a route handler for the **/api/inngest** route. Create a file inside your **app** directory (for example, at **src/app/api/inngest/route.ts**).
+
 ```ts src/app/api/inngest/route.ts
 import { serve } from "inngest/next"
 import { inngest } from "../../../inngest/client"
@@ -66,14 +92,16 @@ import { inngest } from "../../../inngest/client"
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [
-    /* your functions will be passed here later! */
+    /* your functions will be passed here later! TODO this part needs to change. */
   ],
 })
 ```
 
 ## !steps Write your first Inngest function
 
-A Feast for Crows, the fourth book, explores the aftermath of the wars, with a focus on the characters in the southern regions of Westeros. It delves into the politics and power struggles in a kingdom weary of battle.
+In this step, you will write your first reliable serverless function. This function will be triggered whenever a specific event occurs (in our case, it will be **test/hello.world**). Then, it will sleep for a second and return a "Hello, World!".
+
+Inside your **src/inngest** directory, create a new file called **functions.ts** where you will define Inngest functions. Add the following code:
 
 ```ts src/inngest/functions.ts
 import { inngest } from "./client"
@@ -95,6 +123,12 @@ export const helloWorld =
   )
 ```
 
+## !steps Add the function to `serve()`
+
+Next, import your Inngest function in the routes handler at **src/app/api/inngest/route.ts** and add it to the **serve** handler so Inngest can invoke it via HTTP.
+
+> 👉 Note that you can import serve() for other frameworks and the rest of the code, in fact, remains the same — only the import statement changes (instead of inngest/next, it would be inngest/astro, inngest/remix, and so on). TODO create aside
+
 ```ts src/app/api/inngest/route.ts
 import { serve } from "inngest/next"
 import { inngest } from "../../../inngest/client"
@@ -108,11 +142,34 @@ export const { GET, POST, PUT } = serve({
 })
 ```
 
-Something about [client.ts](!src/inngest/client.ts), spotlink.
+TODO Something about [client.ts](!src/inngest/client.ts), spotlink.
 
 ## !steps Trigger your function from the development UI
 
-A Dance with Dragons, the fifth book, runs concurrently with A Feast for Crows and focuses on the characters in the North and across the Narrow Sea. The story advances with dragons, the Night’s Watch, and the lingering threat of winter.
+### Useful info
+
+It is worth mentioning here that an event-driven approach allows you to:
+
+- Trigger one or multiple functions from one event.
+- Store received events for a historical record of what happened in your application.
+- Use stored events to replay functions when there are issues in production.
+- Interact with long-running functions by sending new events (cancel, wait for input, and other).
+
+You will test your first event in two ways: by sending it directly to the Inngest UI, and then by triggering it from code.
+
+With your Next.js and Inngest Dev Servers running, head over to Inngest Dev Server ([http://localhost:8288](http://localhost:8288)):
+
+### !preview
+
+![Inngest Dev Server](/dev-server.png)
+
+## !steps Trigger from code
+
+To send a test event, click on “Test Event” in the top right corner.
+
+### !preview
+
+![Inngest Dev Server](/dev-server-frame.png)
 
 ## !steps Trigger from code
 
