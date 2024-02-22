@@ -1,15 +1,17 @@
-import Content from "@/content/getting-started.mdx"
-import { FileLink } from "../../components/code-tree"
+// @ts-ignore
+import { getBlocks } from "@/content/getting-started.ch.md"
+import { FileLink } from "@/components/code-tree"
+import { Guide } from "@/components/scrolly-layout"
 
 export default function GettingStarted() {
-  return (
-    <Content
-      components={{
-        // @ts-ignore
-        a: CustomLink,
-      }}
-    />
-  )
+  const blocks = getBlocks({
+    components: {
+      // @ts-ignore
+      a: CustomLink,
+    },
+  })
+
+  return <Guide blocks={blocks} />
 }
 
 const CustomLink = ({

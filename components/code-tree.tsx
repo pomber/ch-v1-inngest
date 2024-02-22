@@ -18,7 +18,7 @@ export interface FolderNode {
 }
 
 const FileTreeContext = React.createContext({
-  select: (id: string) => {},
+  select: (id: string, mark?: string) => {},
   selected: "",
 })
 
@@ -43,15 +43,17 @@ export function FileTreeProvider({ children }: { children: React.ReactNode }) {
 
 export function FileLink({
   path,
+  mark,
   children,
 }: {
   path: string
+  mark?: string
   children?: React.ReactNode
 }) {
   const { select } = React.useContext(FileTreeContext)
   return (
     <button
-      onClick={() => select(path)}
+      onClick={() => select(path, mark)}
       className="text-blue-300 hover:text-blue-400"
     >
       {children}

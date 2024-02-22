@@ -1,5 +1,5 @@
 import { CodeContent, CodeBlock } from "codehike"
-// import { NextStep, Step, StepContent, Steps, StepsNav } from "./steps"
+
 import {
   CodeTree,
   FileNode,
@@ -22,30 +22,30 @@ function cloneTree(tree: TreeNode[]): TreeNode[] {
   })
 }
 
-export function Guide({ hike }: { hike: any }) {
+export function Guide({ blocks }: { blocks: any }) {
   const files: FolderNode = {
     id: "src",
     name: "src",
     children: [],
   }
   let prevScreenshot: any = null
-  const steps = hike.steps.map((step: any, i: number) => {
+  const steps = blocks.steps.map((step: any, i: number) => {
     step.code?.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
     const filesClone = cloneTree([files])
-    prevScreenshot = step.preview?.[0]?.children || prevScreenshot
+    prevScreenshot = step.preview?.children || prevScreenshot
     return {
       title: step.query,
       files: filesClone,
       // auto select the first code block
       selected: step.code?.[0]?.meta || null,
-      screenshot: prevScreenshot,
+      screenshot: <div className="max-w-3xl mx-auto">{prevScreenshot}</div>,
       content: <div className="p-2">{step.children}</div>,
       hello: <div>hello {i}</div>,
     }
   })
 
   let i = 0
-  const content = hike.children.map((kid: any) => {
+  const content = blocks.children.map((kid: any) => {
     if (kid.props?.name !== "steps") {
       return kid
     }
@@ -67,7 +67,7 @@ export function Guide({ hike }: { hike: any }) {
       <FileTreeProvider>
         <Panels
           left={
-            <div className="overflow-auto px-2 pt-32 pb-[90vh]">{content}</div>
+            <div className="overflow-auto px-8 pt-32 pb-[90vh]">{content}</div>
           }
           topRight={<CodeTree className="h-full" />}
           bottomRight={<Step element="screenshot" />}
@@ -119,6 +119,11 @@ function Code({ codeblock }: { codeblock: CodeBlock }) {
       codeblock={codeblock}
       config={{ theme: "github-dark" }}
       className="min-h-[40rem]"
+      components={{ Mark }}
     />
   )
+}
+
+function Mark({ children }: { children: string }) {
+  return <mark className="bg-blue-400">{children}</mark>
 }

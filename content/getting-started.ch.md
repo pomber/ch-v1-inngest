@@ -1,8 +1,3 @@
-import { Hike } from "codehike"
-import { Guide } from "@/components/scrolly-layout"
-
-<Hike as={Guide}>
-
 # Quick Start
 
 In this tutorial you will add Inngest to a Next.js app to see how easy it can be to build complex workflows.
@@ -15,19 +10,19 @@ By the end of this ten-minute tutorial you will:
 - Write your first Inngest function.
 - Trigger your function from code and Inngest Dev Server.
 
-## !steps Quick start
+## !!steps
 
 In this tutorial you can use any existing Next.js project, or you can create a new one.
 
 Run the following command in your terminal to create a new Next.js project:
 
-```bash !ch-exclude
+```bash
 npx create-next-app@latest --ts --eslint --tailwind --src-dir --app --import-alias='@/*' inngest-guide
 ```
 
 Open the chosen project in your code editor and start your Next.js app in development mode by running:
 
-```bash !ch-exclude
+```bash
 npm run dev
 ```
 
@@ -37,9 +32,9 @@ npm run dev
 
 With the Next.js app now running running open a new tab in your terminal. In your project directory's root, run the following command to install Inngest SDK:
 
-## !steps Install Inngest
+## !!steps Install Inngest
 
-```bash !ch-exclude
+```bash
 npm install inngest
 ```
 
@@ -49,11 +44,11 @@ npm install inngest
 
 Next, start the [Inngest Dev Server](https://www.inngest.com/docs/local-development#inngest-dev-server), which is a fast, in-memory version of Inngest where you can quickly send and view events events and function runs:
 
-## !steps Install Inngest
+## !!steps Install Inngest
 
 Next, start the Inngest Dev Server, which is a fast, in-memory version of Inngest where you can quickly send and view events events and function runs:
 
-```bash !ch-exclude
+```bash
 npx inngest-cli@latest dev
 ```
 
@@ -63,7 +58,7 @@ In your browser open [http://localhost:8288](http://localhost:8288) to see the d
 
 ![Inngest Dev Server](/dev-server.png)
 
-## !steps Create an Inngest client
+## !!steps Create an Inngest client
 
 Inngest invokes your functions securely via an API endpoint at **/api/inngest**. To enable that, you will create an [Inngest client](https://www.inngest.com/docs/reference/client/create) in your Next.js project, which you will use to send events and create functions.
 
@@ -71,7 +66,7 @@ Make a new directory next to your **app** directory (for example, **app/src/inng
 
 In this directory create a file, **client.ts** and create your first Inngest client to send and receive events.
 
-```ts src/inngest/client.ts
+```ts !! src/inngest/client.ts
 import { Inngest } from "inngest"
 
 // Create a client to send and receive events
@@ -80,11 +75,11 @@ export const inngest = new Inngest({
 })
 ```
 
-## !steps Set up route handler
+## !!steps Set up route handler
 
 Set up a route handler for the **/api/inngest** route. Create a file inside your **app** directory (for example, at **src/app/api/inngest/route.ts**).
 
-```ts src/app/api/inngest/route.ts
+```ts !! src/app/api/inngest/route.ts
 import { serve } from "inngest/next"
 import { inngest } from "../../../inngest/client"
 
@@ -97,39 +92,35 @@ export const { GET, POST, PUT } = serve({
 })
 ```
 
-## !steps Write your first Inngest function
+## !!steps Write your first Inngest function
 
 In this step, you will write your first reliable serverless function. This function will be triggered whenever a specific event occurs (in our case, it will be **test/hello.world**). Then, it will sleep for a second and return a "Hello, World!".
 
 Inside your **src/inngest** directory, create a new file called **functions.ts** where you will define Inngest functions. Add the following code:
 
-```ts src/inngest/functions.ts
+```ts !! src/inngest/functions.ts
 import { inngest } from "./client"
 
-export const helloWorld =
-  inngest.createFunction(
-    { id: "hello-world" },
-    { event: "test/hello.world" },
-    async ({ event, step }) => {
-      await step.sleep(
-        "wait-a-moment",
-        "1s",
-      )
-      return {
-        event,
-        body: "Hello, World!",
-      }
-    },
-  )
+export const helloWorld = inngest.createFunction(
+  { id: "hello-world" },
+  { event: "test/hello.world" },
+  async ({ event, step }) => {
+    await step.sleep("wait-a-moment", "1s")
+    return {
+      event,
+      body: "Hello, World!",
+    }
+  },
+)
 ```
 
-## !steps Add the function to `serve()`
+## !!steps Add the function to `serve()`
 
 Next, import your Inngest function in the routes handler at **src/app/api/inngest/route.ts** and add it to the **serve** handler so Inngest can invoke it via HTTP.
 
 > 👉 Note that you can import serve() for other frameworks and the rest of the code, in fact, remains the same — only the import statement changes (instead of inngest/next, it would be inngest/astro, inngest/remix, and so on). TODO create aside
 
-```ts src/app/api/inngest/route.ts
+```ts !! src/app/api/inngest/route.ts
 import { serve } from "inngest/next"
 import { inngest } from "../../../inngest/client"
 import { helloWorld } from "../../../inngest/functions"
@@ -142,9 +133,9 @@ export const { GET, POST, PUT } = serve({
 })
 ```
 
-TODO Something about [client.ts](!src/inngest/client.ts), spotlink.
+TODO Something about [client.ts](!src/inngest/client.ts#5), spotlink.
 
-## !steps Trigger your function from the development UI
+## !!steps Trigger your function from the development UI
 
 ### Useful info
 
@@ -163,7 +154,7 @@ With your Next.js and Inngest Dev Servers running, head over to Inngest Dev Serv
 
 ![Inngest Dev Server](/dev-server.png)
 
-## !steps Send a test event
+## !!steps Send a test event
 
 To send a test event, click on “Test Event” in the top right corner.
 
@@ -171,7 +162,7 @@ To send a test event, click on “Test Event” in the top right corner.
 
 ![Inngest Dev Server](/dev-server-frame.png)
 
-## !steps Trigger from code
+## !!steps Trigger from code
 
 In the popup console, add the event name (which you defined in the `createFunction` (TODO make this highligtable in the code panels) method earlier) and some test metadata like an email address and press the "Send Event" button:
 
@@ -190,7 +181,7 @@ TODO this block of JSON needs to be copy-pastable from here—it doesn't show in
 
 ![Inngest Dev Server](/dev-server-test-event-console.png)
 
-## !steps Inspect event logs locally
+## !!steps Inspect event logs locally
 
 The event is sent to Inngest (which is running locally) and automatically executes your function in the background! You can see the new function's execution logged in the [stream tab](http://localhost:8288/stream).
 
@@ -198,7 +189,7 @@ The event is sent to Inngest (which is running locally) and automatically execut
 
 ![Inngest Dev Server](/dev-server-event-1.png)
 
-## !steps Inspect an event's log
+## !!steps Inspect an event's log
 
 Click on the log to see more information about the event such as which function was triggered, its payload, output, and timeline.
 
@@ -206,7 +197,7 @@ Click on the log to see more information about the event such as which function 
 
 ![Inngest Dev Server](/dev-server-event-details-1.png)
 
-## !steps The event inspection panel
+## !!steps The event inspection panel
 
 In this example, the event triggered the `hello-world` function, which did sleep for a second and then returned "Hello, World!". Exactly as planned!
 
@@ -214,7 +205,7 @@ In this example, the event triggered the `hello-world` function, which did sleep
 
 ![Inngest Dev Server](/dev-server-event-1-frames.png)
 
-## !steps Replay an event
+## !!steps Replay an event
 
 If your event behaved in an odd way, you can either replay it or edit and replay it. Replaying a function can be really helpful in debugging the function errors locally. To try it, click on the "Replay" button in the top center.
 
@@ -222,7 +213,7 @@ If your event behaved in an odd way, you can either replay it or edit and replay
 
 ![Inngest Dev Server](/event-details-1-replay.png)
 
-## !steps Recording the stream of events
+## !!steps Recording the stream of events
 
 After the event is replayed, there are two events recorded in the dashboard.
 
@@ -230,7 +221,7 @@ After the event is replayed, there are two events recorded in the dashboard.
 
 ![Inngest Dev Server](/dev-server-event-2.png)
 
-## !steps Trigger an event from inside your app
+## !!steps Trigger an event from inside your app
 
 To run functions reliably in your app, you'll need to send an event to Inngest. Once the event is received, it is forwarded to all functions that listen to it.
 
@@ -248,7 +239,7 @@ You will now send an event from the “hello” Next.js API function. To do so, 
 
 👉 Note that we use [force-dynamic](https://nextjs.org/docs/app/building-your-application/caching) to ensure we always send a new event on every request. In most situations, you'll probably want to send an event during a POST request so that you don't need this config option. TODO this should highlight "force-dynamic" in the code panel when you hover it. SPOTLINK!
 
-```ts src/app/api/hello/route.ts
+```ts !! src/app/api/hello/route.ts
 import { NextResponse } from "next/server"
 import { inngest } from "../../../inngest/client" // Import our client
 
@@ -271,7 +262,7 @@ export async function GET() {
 }
 ```
 
-## !steps Test the Inngest event
+## !!steps Test the Inngest event
 
 Every time this API route is requested, an event is sent to Inngest. To test it, open [http://localhost:3000/api/hello](http://localhost:3000/api/hello). You should see the following output: `{"name":"Hello Inngest from Next!"}`.
 
@@ -281,7 +272,7 @@ TODO it would be great to show these local app screens in a 2 up next to the Inn
 
 ![Local app](/hello-from-next.png)
 
-## !steps Check the Inngest event log
+## !!steps Check the Inngest event log
 
 If you go back to the Inngest Dev Server, you will see this new event appear there as well:
 
@@ -289,7 +280,7 @@ If you go back to the Inngest Dev Server, you will see this new event appear the
 
 ![Inngest Dev Server](/dev-server-event-3.png)
 
-## !steps Malformed events
+## !!steps Malformed events
 
 However, what happens if you send a different event? Let's see! Change **test/hello.world** to **test/hello.bizarro.world** and refresh [http://localhost:3000/api/hello](http://localhost:3000/api/hello). You will see that the event was sent and received.
 
@@ -297,7 +288,7 @@ However, what happens if you send a different event? Let's see! Change **test/he
 
 ![Inngest Dev Server](/dev-server-event-4.png)
 
-## !steps Check the Inngest event log
+## !!steps Check the Inngest event log
 
 No functions were triggered because there is not a single function in your app that is listening to such a bizarre event:
 
@@ -305,7 +296,7 @@ No functions were triggered because there is not a single function in your app t
 
 ![Inngest Dev Server](/dev-server-event-4-details.png)
 
-## !steps Well done!
+## !!steps Well done!
 
 And - that's it! You now have learned how to create Inngest functions and you have sent events to trigger those functions. Congratulations 🥳
 
@@ -320,5 +311,3 @@ To continue your exploration, feel free to check out:
 - Docs page on sending events.
 
 TODO needs a proper ending block for all these, not a step.
-
-</Hike>
