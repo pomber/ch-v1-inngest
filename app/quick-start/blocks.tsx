@@ -11,11 +11,13 @@ export type ScrollyBlocks = {
 export type StepBlock = {
   query: string
   code?: CodeBlock[]
-  preview?: {
-    url: string
-    alt: string
-  }
+  preview?: Image
   children: React.ReactNode[]
+}
+
+type Image = {
+  url: string
+  alt: string
 }
 
 export function aggregateSteps(stepBlocks: StepBlock[]) {
@@ -24,16 +26,16 @@ export function aggregateSteps(stepBlocks: StepBlock[]) {
     name: "src",
     children: [],
   }
-  let prevScreenshot: any = null
-  return stepBlocks.map((step) => {
-    step.code?.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
+
+  let prevScreenshot: Image | null = null
+  return stepBlocks.map(({ code = [], preview }) => {
+    code.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
     const filesClone = cloneTree([files])
-    prevScreenshot = step.preview || prevScreenshot
+    prevScreenshot = preview || prevScreenshot
     return {
-      title: step.query,
       files: filesClone,
       // auto select the first code block
-      selected: step.code?.[0]?.meta || null,
+      selected: code[0]?.meta || null,
       screenshot: (
         <img
           className="max-w-3xl mx-auto max-h-full"

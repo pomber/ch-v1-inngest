@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { cn } from "../lib/utils"
+import { cn } from "@/lib/utils"
 import { FileTree } from "./ui/file-tree"
 import { useSteps } from "codehike/scrolly"
 
@@ -84,7 +84,7 @@ export function CodeTree({ className }: { className?: string }) {
 
   return (
     <div className={cn("flex", className)}>
-      <div className="h-full border-r border-neutral-700 text-white pt-4 w-48 min-w-48">
+      <div className="h-full border-r border-neutral-700/50 text-white pt-4 w-48 min-w-48">
         <FileTree tree={tree} select={select} selected={selected} />
       </div>
       <div className="p-4 overflow-auto w-full h-full" key={selected}>

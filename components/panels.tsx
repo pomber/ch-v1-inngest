@@ -28,7 +28,7 @@ export function Panels({
           className="flex max-h-full min-h-full flex-col"
           defaultSize={70}
         >
-          <section className="w-full bg-zinc-950 flex max-h-full min-h-full flex-col">
+          <section className="w-full flex max-h-full min-h-full flex-col">
             <ResizablePanelGroup direction="vertical" className="">
               <ResizablePanel className="" minSize={20}>
                 {topRight}

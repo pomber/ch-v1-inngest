@@ -47,7 +47,13 @@ const CustomLink = ({
   children: React.ReactNode
 }) => {
   if (href.startsWith("!")) {
-    return <FileLink path={href.slice(1)}>{children}</FileLink>
+    const value = href.slice(1)
+    const [path, mark] = value.split("#")
+    return (
+      <FileLink path={path} mark={mark}>
+        {children}
+      </FileLink>
+    )
   }
   return (
     <a href={href} {...rest}>

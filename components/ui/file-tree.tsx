@@ -1,7 +1,7 @@
 "use client"
 
 import { NodeRendererProps, Tree } from "react-arborist"
-import { File, FolderClosed, FolderOpen } from "lucide-react"
+import { File, Folder } from "lucide-react"
 
 function Node({ node, style }: NodeRendererProps<any>) {
   return (
@@ -18,13 +18,7 @@ function Node({ node, style }: NodeRendererProps<any>) {
       className={`cursor-pointer select-none text-zinc-600 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800`}
     >
       <div className="flex gap-1 px-2">
-        {node.isLeaf ? (
-          <File size={20} />
-        ) : node.isOpen ? (
-          <FolderOpen size={20} />
-        ) : (
-          <FolderClosed size={20} />
-        )}
+        {node.isLeaf ? <File size={20} /> : <Folder size={20} />}
         <span
           className={
             node.isSelected
