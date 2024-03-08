@@ -1,5 +1,5 @@
 // @ts-ignore
-import { getBlocks } from "@/content/getting-started.ch.md"
+import { getBlocks } from "@/content/getting-started.mdx"
 import { CodeTree, FileLink, FileTreeProvider } from "@/components/code-tree"
 import { ScrollyBlocks, aggregateSteps } from "./blocks"
 import { ScrollyStep, Step, Steps } from "codehike/scrolly"
@@ -8,8 +8,12 @@ import { Panels } from "@/components/panels"
 export default function GettingStarted() {
   const blocks = getBlocks({ components: { a: CustomLink } })
   const steps = aggregateSteps(blocks.steps)
-
+// TODO make the Intro stand on top of the preview panels until step 2
   return (
+    <div>
+      <section className="prose prose-invert">
+      {blocks.intro.children}
+      </section>
     <Steps steps={steps}>
       <FileTreeProvider>
         <Panels
@@ -18,7 +22,7 @@ export default function GettingStarted() {
           bottomRight={<CodeTree className="h-full" />}
         />
       </FileTreeProvider>
-    </Steps>
+    </Steps></div>
   )
 }
 

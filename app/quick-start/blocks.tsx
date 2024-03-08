@@ -4,14 +4,20 @@ import { CodeBlock } from "codehike"
 import React from "react"
 
 export type ScrollyBlocks = {
+  intro: IntroBlock
   steps: StepBlock[]
+  children: React.ReactNode[]
+}
+
+export type IntroBlock = {
   children: React.ReactNode[]
 }
 
 export type StepBlock = {
   query: string
   code?: CodeBlock[]
-  preview?: Image
+  screenNextjs?: Image
+  screenDevserver?: Image
   children: React.ReactNode[]
 }
 
@@ -27,23 +33,37 @@ export function aggregateSteps(stepBlocks: StepBlock[]) {
     children: [],
   }
 
-  let prevScreenshot: Image | null = null
-  return stepBlocks.map(({ code = [], preview }) => {
+  let prevScreenNextjs : Image| null = null
+  let prevScreenDevserver: Image| null = null
+
+  return stepBlocks.map(({ code = [], screenDevserver, screenNextjs }) => {
     code.forEach((codeblock: CodeBlock) => addFile(files, codeblock))
     const filesClone = cloneTree([files])
-    prevScreenshot = preview || prevScreenshot
+    prevScreenDevserver = screenDevserver || prevScreenDevserver
+    prevScreenNextjs = screenNextjs || prevScreenNextjs
     return {
       files: filesClone,
       // auto select the first code block
       selected: code[0]?.meta || null,
       screenshot: (
-        <img
-          className="max-w-3xl mx-auto max-h-full"
-          src={prevScreenshot?.url}
-          alt={prevScreenshot?.alt}
-          height="auto"
-          width="auto"
-        />
+        <div>
+          <img
+            className="max-w-3xl mx-auto max-h-full"
+            src={prevScreenDevserver?.url}
+            alt={prevScreenDevserver?.alt}
+            height="auto"
+            width="auto"
+            id="screen"
+          />
+          <img
+            className="max-w-3xl mx-auto max-h-full"
+            src={prevScreenNextjs?.url}
+            alt={prevScreenNextjs?.alt}
+            height="auto"
+            width="auto"
+            id="next"
+          />
+        </div>
       ),
     }
   })
@@ -96,3 +116,6 @@ function cloneTree(tree: TreeNode[]): TreeNode[] {
     return node
   })
 }
+
+// TODO make screens 2 up get creative! use the content!!!!
+// TODO starting previews
